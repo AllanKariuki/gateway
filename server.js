@@ -9,6 +9,7 @@ app.get('/api/test', (req, res) => {
 });
 
 app.use("/api", require("./routers/b2bRouter"));
+app.use("/api", require("./routers/callbackRouter"));
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
