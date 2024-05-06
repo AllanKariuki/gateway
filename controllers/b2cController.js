@@ -32,4 +32,4 @@ const sendb2cPayment = asyncHandler( async (req, res) => {
     }
 });
 
-module.export = { sendb2cPayment };
+module.exports = { sendb2cPayment };
