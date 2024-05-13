@@ -20,6 +20,6 @@ const callback = asyncHandler(async (req, res) => {
         res.status(500).send({message: 'Error receiving callback'});
     }
     res.status(200).send({message: JSON.stringify(data)});
-}
+});
 
 module.exports = { callback };
