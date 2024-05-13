@@ -13,7 +13,7 @@ const pool = new Pool({
 const createLogsTable = async () => {
     const queryText = `CREATE TABLE IF NOT EXISTS
     logs(
-        id UUID PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         request VARCHAR(300) NOT NULL,
         status TEXT NOT NULL,
         created_date TIMESTAMP DEFAULT NOW()
@@ -25,6 +25,21 @@ const createLogsTable = async () => {
     }
 }
 
+createUserTable = async () => {
+   const queryText = `CREATE TABLE IF NOT EXISTS
+    users(
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(128) UNIQUE NOT NULL,
+        password VARCHAR(128) NOT NULL
+    )`;
+    try {
+        const res = await pool.query(queryText);
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 createLogsTable();
+createUserTable();
 
 module.exports = pool;
