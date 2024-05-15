@@ -1,7 +1,10 @@
 const express = require('express');
-const c2bController = require('../controllers/c2bController');
+const { protect } = require('../middleware/authMiddleware');
+const {requestc2bPayment, processc2bPayment} = require('../controllers/c2bController');
 const router = express.Router();
 
-router.route("/c2b/").get(c2bController.sendc2bPayment);
+router.post("/c2b/request", requestc2bPayment);
+router.post("/c2b/process", processc2bPayment);
+
 
 module.exports = router;
