@@ -12,10 +12,17 @@ const pool = new Pool({
 
 const createLogsTable = async () => {
     const queryText = `CREATE TABLE IF NOT EXISTS
-    logs(
+    c2blogs(
         id SERIAL PRIMARY KEY,
-        request VARCHAR(300) NOT NULL,
-        status TEXT NOT NULL,
+        MerchantCode VARCHAR(128) NOT NULL,
+        NetworkCode VARCHAR(128) NOT NULL,
+        PhoneNumber VARCHAR(128) NOT NULL,
+        TransactionDesc VARCHAR(128) NOT NULL,
+        AccountReference VARCHAR(128) NOT NULL,
+        Currency VARCHAR(128) NOT NULL,
+        Amount VARCHAR(128) NOT NULL,
+        TransactionFee INT NOT NULL,
+        CallbackURL VARCHAR(128) NOT NULL,
         created_date TIMESTAMP DEFAULT NOW()
     )`;
     try {

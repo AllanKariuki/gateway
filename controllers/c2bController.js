@@ -17,14 +17,17 @@ const requestc2bPayment =  asyncHandler(async (req, res) => {
             Authorization: `Bearer ${token}`
         }
     }
+    console.log(token)
     const data = req.body;
-
+    try {
+        const insertLogs = 'INSERT INTO c2blogs(MerchantCode, NetworkCode, PhoneNumber, TransactionDesc, AccountReference, Currency, Amount, TransactionFee, CallBackURL) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+        const values = Object.values(data);
+        await pool.query(insertLogs, values);
+    } catch (error) {
+        console.log(error);
+    }
     try {
         const response = await axios.post('https://sandbox.sasapay.app/api/v1/payments/request-payment/', data, config);
-
-        // const insertLogs = 'INSERT INTO logs(request, status) VALUES($1, $2, $3)';
-        // const values = [JSON.stringify(data), response.data.status];
-        // await pool.query(insertLogs, values);
         res.status(200).send({message: response.data});
     } catch (error) {
         console.log(error);
