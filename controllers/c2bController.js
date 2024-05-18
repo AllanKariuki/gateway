@@ -60,6 +60,7 @@ const requestc2bPayment =  asyncHandler(async (req, res) => {
 
 const processc2bPayment = asyncHandler(async (req, res) => {
     let token;
+    let insertResponse;
     try{
         token = await getAccessToken();
     } catch (error) {
@@ -72,10 +73,20 @@ const processc2bPayment = asyncHandler(async (req, res) => {
     }
     const data = req.body;
 
-
+    try {
+        const queryText = 'INSERT INTO c2bprocesslogs(CheckoutRequestID, MerchantCode, VerificationCode) VALUES ($1, $2, $3) RETURNING *';
+        const values = Object.values(data);
+        const result = await pool.query(queryText, values);
+        insertResponse = result.rows[0];
+    } catch(error) {
+        throw new Error(error.message);
+    }
 
     try {
         const response = await axios.post('https://sandbox.sasapay.app/api/v1/payments/process-payment/', data, config);
+        const queryText = 'UPDATE c2bprocesslogs SET status = $1, detail = $2 WHERE id = $3'
+        const values = [response.data.status, response.data.detail, insertResponse.id];
+        await pool.query(queryText, values);
         res.status(200).send({message: response.data});
     } catch (error) {
         res.status(500).send({message:error.message});
