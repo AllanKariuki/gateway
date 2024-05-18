@@ -23,7 +23,15 @@ const createLogsTable = async () => {
         Amount VARCHAR(128) NOT NULL,
         TransactionFee INT NOT NULL,
         CallbackURL VARCHAR(128) NOT NULL,
-        created_date TIMESTAMP DEFAULT NOW()
+        created_date TIMESTAMP DEFAULT NOW(),
+        status VARCHAR(50) DEFAULT 'Pending',
+        details VARCHAR(128) DEFAULT 'No details',
+        PaymentGateway VARCHAR(128) DEFAULT 'SasaPay',
+        MerchantRequestID VARCHAR(128) DEFAULT 'No message',
+        CheckoutRequestID VARCHAR(128) DEFAULT 'No message',
+        ResponseCode VARCHAR(128) DEFAULT 'No message',
+        ResponseDescription VARCHAR(128) DEFAULT 'No message',
+        CustomerMessage VARCHAR(520) DEFAULT 'No message'
     )`;
     try {
         const res = await pool.query(queryText);
