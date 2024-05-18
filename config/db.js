@@ -12,7 +12,7 @@ const pool = new Pool({
 
 const createLogsTable = async () => {
     const queryText = `CREATE TABLE IF NOT EXISTS
-    c2blogs(
+    c2brequestlogs(
         id SERIAL PRIMARY KEY,
         MerchantCode VARCHAR(128) NOT NULL,
         NetworkCode VARCHAR(128) NOT NULL,
@@ -36,7 +36,7 @@ const createLogsTable = async () => {
     try {
         const res = await pool.query(queryText);
     } catch (err) {
-        console.log(err);
+        throw new Error(err.message);
     }
 }
 
@@ -50,11 +50,29 @@ createUserTable = async () => {
     try {
         const res = await pool.query(queryText);
     } catch (err) {
-        console.log(err)
+        throw new Error(err.message);
+    }
+}
+
+createc2bProcessTable = async () => {
+    const queryText = `CREATE TABLE IF NOT EXISTS
+    c2bprocesslogs(
+        id SERIAL PRIMARY KEY,
+        CheckoutRequestID VARCHAR(128) NOT NULL,
+        MerchantCode VARCHAR(128) NOT NULL,
+        VerificationCode VARCHAR(128) NOT NULL,
+        status VARCHAR(50) DEFAULT 'Pending',
+        detail VARCHAR(128) DEFAULT 'No details',
+                       )`;
+    try {
+        const res = await pool.query(queryText);
+    }catch (err) {
+        throw new Error(err.message);
     }
 }
 
 createLogsTable();
 createUserTable();
+createc2bProcessTable();
 
 module.exports = pool;

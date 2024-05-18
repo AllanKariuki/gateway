@@ -17,11 +17,9 @@ const requestc2bPayment =  asyncHandler(async (req, res) => {
             Authorization: `Bearer ${token}`
         }
     }
-    console.log(token)
     const data = req.body;
-    console.log(data.AccountReference);
     try {
-        const insertc2brequestLogs = 'INSERT INTO c2blogs(MerchantCode, NetworkCode, PhoneNumber, TransactionDesc, AccountReference, Currency, Amount, TransactionFee, CallBackURL) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
+        const insertc2brequestLogs = 'INSERT INTO c2brequestlogs(MerchantCode, NetworkCode, PhoneNumber, TransactionDesc, AccountReference, Currency, Amount, TransactionFee, CallBackURL) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
         const values = Object.values(data);
         const request = await pool.query(insertc2brequestLogs, values);
     } catch (error) {
@@ -29,7 +27,7 @@ const requestc2bPayment =  asyncHandler(async (req, res) => {
     }
     try {
         const response = await axios.post('https://sandbox.sasapay.app/api/v1/payments/request-payment/', data, config);
-        const insertResponse = `UPDATE c2blogs SET
+        const insertResponse = `UPDATE c2brequestlogs SET
                    status = $1,
                    details = $2,
                    PaymentGateway = $3,
@@ -56,7 +54,6 @@ const requestc2bPayment =  asyncHandler(async (req, res) => {
 
         res.status(200).send({message: response.data});
     } catch (error) {
-        console.log(error);
         res.status(500).send({message:error.message});
     }
 });
@@ -66,7 +63,7 @@ const processc2bPayment = asyncHandler(async (req, res) => {
     try{
         token = await getAccessToken();
     } catch (error) {
-        console.log(error);
+        throw new Error(error.message);
     }
     const config = {
         headers: {
@@ -75,11 +72,13 @@ const processc2bPayment = asyncHandler(async (req, res) => {
     }
     const data = req.body;
 
+
+
     try {
         const response = await axios.post('https://sandbox.sasapay.app/api/v1/payments/process-payment/', data, config);
         res.status(200).send({message: response.data});
     } catch (error) {
-        console.log(error);
+        res.status(500).send({message:error.message});
     }
 });
 
