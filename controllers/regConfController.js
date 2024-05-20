@@ -21,4 +21,4 @@ const regConf = asyncHandler(async (req, res) => {
     }
 })
 
-module.exports = regConf
+module.exports = {regConf}
