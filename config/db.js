@@ -74,8 +74,8 @@ const createc2bProcessTable = async () => {
 const createb2cLogsTable = async () => {
     const queryText = `CREATE TABLE IF NOT EXISTS
     b2clogs(
+        userId INT NOT NULL,
         MerchantCode VARCHAR(128) NOT NULL,
-        user VARCHAR(128) NOT NULL,
         Amount INT NOT NULL,
         CURRENCY VARCHAR(128) NOT NULL,
         MerchantTransactionReference VARCHAR(128) NOT NULL,
@@ -89,7 +89,8 @@ const createb2cLogsTable = async () => {
         ConversationID VARCHAR(128) DEFAULT 'None',
         OriginatorConversationID VARCHAR(128) DEFAULT 'None',
         ResponseCode VARCHAR(100) DEFAULT 'None',
-        ResponseDescription VARCHAR(100) DEFAULT 'None'
+        ResponseDescription VARCHAR(100) DEFAULT 'None',
+        FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
                        )
 `
     try {
@@ -104,7 +105,6 @@ const createb2bLogsTable = async () => {
     const queryText = `CREATE TABLE IF NOT EXISTS
     b2blogs(
         MerchantCode VARCHAR(128) NOT NULL,
-        user VARCHAR(128) NOT NULL,
         MerchantTransactionReference VARCHAR(128) NOT NULL,
         Currency VARCHAR(128) NOT NULL,
         Amount INT NOT NULL,
@@ -120,7 +120,9 @@ const createb2bLogsTable = async () => {
         ConversationID VARCHAR(100) DEFAULT 'Null',
         OriginatorConversationID VARCHAR(128) DEFAULT 'Null',
         ResponseCode VARCHAR(128) DEFAULT 'Null',
-        ResponseDescription VARCHAR(128) DEFAULT 'Null'
+        ResponseDescription VARCHAR(128) DEFAULT 'Null',
+        userId INT NOT NULL,
+        FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
         )
     `
 
