@@ -62,11 +62,11 @@ createc2bProcessTable = async () => {
         MerchantCode VARCHAR(128) NOT NULL,
         VerificationCode VARCHAR(128) NOT NULL,
         status VARCHAR(50) DEFAULT 'Pending',
-        detail VARCHAR(128) DEFAULT 'No details',
+        detail VARCHAR(128) DEFAULT 'No details'
                        )`;
     try {
         const res = await pool.query(queryText);
-    }catch (err) {
+    } catch (err) {
         throw new Error(err.message);
     }
 }
