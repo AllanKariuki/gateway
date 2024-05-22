@@ -149,27 +149,11 @@ const createRolesTable = async () => {
     }
 }
 
-const insertRoles = async () => {
-    const queryText = `
-        ALTER TABLE users
-        ADD COLUMN role INT NOT NULL,
-        ADD CONSTRAINT fk_role
-        FOREIGN KEY (role)
-        REFERENCES roles(id)
-        ON DELETE CASCADE
-            `;
-    try {
-        await pool.query(queryText);
-    } catch (err) {
-        console.log(err);
-    }
-}
 createLogsTable();
 createUserTable();
 createc2bProcessTable();
 createb2cLogsTable()
 createb2bLogsTable();
 createRolesTable();
-insertRoles();
 
 module.exports = pool;
