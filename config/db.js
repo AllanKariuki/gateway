@@ -133,10 +133,43 @@ const createb2bLogsTable = async () => {
     }
 }
 
+const createRolesTable = async () => {
+    const queryText = `CREATE TABLE IF NOT EXISTS
+    roles(
+        id SERIAL PRIMARY KEY,
+        role VARCHAR(128) NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+    )`;
+
+    try {
+        const res = await pool.query(queryText);
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const insertRoles = async () => {
+    const queryText = `
+        ALTER TABLE users
+        ADD COLUMN role INT NOT NULL,
+        ADD CONSTRAINT fk_role
+        FOREIGN KEY (role)
+        REFERENCES roles(id)
+        ON DELETE CASCADE
+            `;
+    try {
+        await pool.query(queryText);
+    } catch (err) {
+        console.log(err);
+    }
+}
 createLogsTable();
 createUserTable();
 createc2bProcessTable();
 createb2cLogsTable()
 createb2bLogsTable();
+createRolesTable();
+insertRoles();
 
 module.exports = pool;
