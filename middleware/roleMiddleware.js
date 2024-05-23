@@ -1,4 +1,4 @@
-const { pool } = require('../config/db');
+const pool = require('../config/db');
 
 const checkRole = (role) => {
     return async (req, res, next) => {
@@ -9,6 +9,7 @@ const checkRole = (role) => {
             }
             next();
         } catch (error) {
+            console.log(error)
             res.status(500).json({ message: 'Internal server error'});
         }
     }
