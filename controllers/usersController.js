@@ -19,8 +19,8 @@ const createUser = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(data.password, salt)
     try {
-        const queryText = `INSERT INTO users(email, password) VALUES($1, $2) RETURNING *`;
-        const values = [data.email, hashedPassword];
+        const queryText = `INSERT INTO users(email, password, phonenumber, name, role) VALUES($1, $2, $3, $4, $5) RETURNING *`;
+        const values = [data.email, hashedPassword, data.phonenumber, data.name, data.role];
         const response = await pool.query(queryText, values);
         res.status(201).send({message: "User created successfully", data: response.rows[0]});
     } catch(error) {
@@ -64,4 +64,20 @@ const getMe = asyncHandler(async (req, res) => {
     res.status(200).send({message: 'User retrieved successfully', data: user.rows[0]});
 })
 
-module.exports = { createUser, loginUser, getMe }
+const createRole = asyncHandler(async (req, res) => {
+    const data = req.body;
+
+    if (!data.role) {
+        res.status(400).send({message: 'Please add all fields'});
+    }
+    try {
+        const queryText = 'INSERT INTO roles(role) VALUES($1) RETURNING *';
+        const values = [data.role];
+        const response = await pool.query(queryText, values);
+        res.status(201).send({message: 'Role created successfully', data: response.rows[0]});
+    } catch (error) {
+        res.status(400).send({message: 'Error creating role', error: error.message});
+    }
+})
+
+module.exports = { createUser, loginUser, getMe, createRole }
